@@ -18,7 +18,7 @@
 # 2. Session Host Configuration
 - Create session host VMs
 - Use Spot Pricing VMs
-- Join to domain (if applicable)
+- Join to Entra ID
 - Install AVD agent
 - Register with host pool
 
@@ -35,7 +35,6 @@
 - Image management
 - Scaling plan
 - Update management
-- VM Extension to configure Ansible
 
 # 6. User Experience
 - FSLogix profile configuration

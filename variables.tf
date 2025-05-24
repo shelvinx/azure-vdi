@@ -1,3 +1,21 @@
+variable "HCP_CLIENT_ID" {
+  description = "HCP Client ID"
+  type        = string
+  sensitive   = true
+}
+
+variable "HCP_CLIENT_SECRET" {
+  description = "HCP Client Secret"
+  type        = string
+  sensitive   = true
+}
+
+variable "key_vault_name" {
+  description = "Key Vault name"
+  type        = string
+  sensitive   = true
+}
+
 variable "location" {
   type    = string
   default = "uksouth"
@@ -11,20 +29,38 @@ variable "tags" {
   }
 }
 
-variable "existing_vnet_name" {
+variable "admin_password" {
   type        = string
-  description = "The name of the existing Virtual Network."
-  default     = "vnet-spoke"
+  sensitive   = true
+  description = "Retrieved from HCP Vault"
 }
 
-variable "existing_vnet_resource_group_name" {
-  type        = string
-  description = "The name of the resource group where the existing Virtual Network resides."
-  default     = "rg-platform"
+variable "windows_vm_count" {
+  type        = number
+  description = "Number of Windows VMs to create"
 }
 
-variable "existing_subnet_name" {
+variable "spot_max_price" {
+  type        = number
+  description = "Maximum price for spot instances"
+}
+
+variable "eviction_policy" {
   type        = string
-  description = "The name of the existing subnet within the Virtual Network."
-  default     = "default"
+  description = "Eviction policy for spot instances"
+}
+
+variable "priority" {
+  type        = string
+  description = "Priority for spot instances"
+
+  validation {
+    condition     = var.priority == "Spot" || var.priority == "Regular"
+    error_message = "Priority must be Spot or Regular"
+  }
+}
+
+variable "sku_size" {
+  type        = string
+  description = "SKU size for the VM"
 }
