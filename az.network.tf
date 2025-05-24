@@ -14,7 +14,9 @@ module "avd_vnet" {
     avd_subnet = {
       name                   = module.naming.subnet.name
       address_prefix         = "10.0.0.0/24"
-      network_security_group = module.avd_nsg.resource.id
+      network_security_group = {
+        id = module.avd_nsg.resource_id
+      }
     }
   }
 
@@ -31,17 +33,6 @@ module "avd_nsg" {
   resource_group_name = module.resource_group.name
 
   security_rules = {
-    AllowSSH = {
-      name                       = "AllowSSH"
-      priority                   = 100
-      direction                  = "Inbound"
-      access                     = "Allow"
-      protocol                   = "Tcp"
-      source_port_range          = "*"
-      destination_port_range     = "22"
-      source_address_prefix      = "*"
-      destination_address_prefix = "*"
-    }
     AllowRDP = {
       name                       = "AllowRDP"
       priority                   = 110
