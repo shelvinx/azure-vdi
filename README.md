@@ -29,16 +29,21 @@ The state is managed in Terraform Cloud in the "az-env" organization and "az-vdi
   ```powershell
   New-Item -Path HKLM:\SOFTWARE\Microsoft\RDInfraAgent\AADJPrivate
   ```
+- Recommend updating the `entra_login` extension with MDM Settings for Production Environment
 - AVD Agent is configured using DSC
+- Scale using the `windows_vm_count` variable, no additional changes required or add auto scaling plan configuration
 
 ## File Structure
 
 - `main.tf`: Core infrastructure configuration
+- `az.iam.tf`: Role Assignments
+- `az.network.tf`: VNET and Subnet configuration
 - `variables.tf`: Variable declarations
-- `outputs.tf`: Output values for the deployment
 - `az.virtualdesktop.tf`: AVD-specific resources
 - `az.vm-windows.tf`: Windows VM configurations
 - `data.tf`: Data sources used in the configuration
+- `locals.tf`: for_each loop configuration
 
 ## Issues
 - Currently has a Public IP associated with NIC due to issues with connectivity.
+- VM Extensions dependancy provision_after_extensions issue - [https://github.com/hashicorp/terraform-provider-azurerm/issues/25423](https://github.com/hashicorp/terraform-provider-azurerm/issues/25423) - Use `depends_on` with the Terraform extension resource resolves the issue.

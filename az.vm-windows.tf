@@ -72,7 +72,6 @@ module "windows_vm" {
       type                       = "DSC"
       type_handler_version       = "2.83"
       auto_upgrade_minor_version = true
-      provision_after_extensions = ["AADLoginForWindows"]
 
       settings = jsonencode({
         wmfVersion = "latest"
@@ -86,6 +85,7 @@ module "windows_vm" {
           registrationInfoToken = azurerm_virtual_desktop_host_pool_registration_info.registration.token
         }
       })
+      depends_on = ["AADLogin"]
     },
     # VM Configuration Extension
     vm_config = {
