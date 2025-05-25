@@ -97,11 +97,13 @@ module "windows_vm" {
       settings                   = <<SETTINGS
       {
         "fileUris": [
-          "https://raw.githubusercontent.com/shelvinx/terraform-az-infra/refs/heads/main/scripts/vm-config.ps1"
+          "https://raw.githubusercontent.com/shelvinx/azure-vdi/refs/heads/main/scripts/avd-config.ps1"
         ],
-        "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File vm-config.ps1"
+        "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File avd-config.ps1"
       }
       SETTINGS
+
+      depends_on = ["AVDRegistration"]
     },
     # Key Vault Configuration Extension
     keyvault = {
