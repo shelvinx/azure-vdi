@@ -41,6 +41,7 @@ module "windows_vm" {
         ip_configurations_1 = {
           name                          = "ipconfig-${each.key}"
           private_ip_subnet_resource_id = module.avd_vnet.subnets.avd_subnet.resource_id
+          public_ip_address_resource_id = module.host_public_ip[each.key].resource_id
         }
       }
     }
@@ -57,7 +58,7 @@ module "windows_vm" {
 
   extensions = {
     # Entra ID Join Extension
-    entra_login = {
+    AADLogin = {
       name                       = "AADLoginForWindows"
       publisher                  = "Microsoft.Azure.ActiveDirectory"
       type                       = "AADLoginForWindows"
@@ -65,11 +66,11 @@ module "windows_vm" {
       auto_upgrade_minor_version = true
     },
     # AVD Agent Extension
-    avd_agent = {
-      name                       = "AVDRegistration"
+    AVDRegistration = {
+      name                       = "AVD-DSC-Configuration"
       publisher                  = "Microsoft.Powershell"
       type                       = "DSC"
-      type_handler_version       = "2.77"
+      type_handler_version       = "2.83"
       auto_upgrade_minor_version = true
       provision_after_extensions = ["AADLoginForWindows"]
 
@@ -93,7 +94,6 @@ module "windows_vm" {
       type                       = "CustomScriptExtension"
       type_handler_version       = "1.10"
       auto_upgrade_minor_version = true
-      provision_after_extensions = ["AVDRegistration"]
       settings                   = <<SETTINGS
       {
         "fileUris": [

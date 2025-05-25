@@ -8,4 +8,4 @@ priority        = "Spot"
 eviction_policy = "Deallocate"
 
 # SKU Size
-sku_size = "Standard_D4als_v6"
+sku_size = "Standard_D2als_v6"
