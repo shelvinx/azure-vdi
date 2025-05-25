@@ -12,8 +12,8 @@ module "avd_vnet" {
 
   subnets = {
     avd_subnet = {
-      name                   = module.naming.subnet.name
-      address_prefix         = "10.0.0.0/24"
+      name           = module.naming.subnet.name
+      address_prefix = "10.0.0.0/24"
       network_security_group = {
         id = module.avd_nsg.resource_id
       }
@@ -67,6 +67,19 @@ module "avd_nsg" {
       destination_address_prefix = "*"
     }
   }
+
+  tags = var.tags
+}
+
+# Session Host Public IP
+module "host_public_ip" {
+  for_each = local.windows_vm_instances
+  source   = "Azure/avm-res-network-publicipaddress/azurerm"
+  version  = "0.2.0"
+
+  location            = var.location
+  resource_group_name = module.resource_group.name
+  name                = "${module.naming.public_ip.name}-${each.key}"
 
   tags = var.tags
 }

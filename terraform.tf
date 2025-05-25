@@ -29,3 +29,6 @@ provider "azurerm" {
   resource_provider_registrations = "extended"
 }
 
+provider "azuread" {
+  tenant_id = "68c917de-20e3-4751-9ccc-cbbe32e11325"
+}
