@@ -136,24 +136,14 @@ catch {
 
 # Set registry key for Entra ID join
 try {
-    Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\RDInfraAgent" -Name "AADJPrivate"
-    Write-Output "Entra ID join registry key set successfully."
+    if (-not (Test-Path "HKLM:\SOFTWARE\Microsoft\RDInfraAgent\AADJPrivate")) {
+        New-Item -Path "HKLM:\SOFTWARE\Microsoft\RDInfraAgent\AADJPrivate" -Force | Out-Null
+        Write-Output "Entra ID join registry key created successfully."
+    }
+    else {
+        Write-Output "Entra ID join registry key already exists."
+    }
 }
 catch {
     Write-Error "Failed to set Entra ID join registry key: $($_.Exception.Message)"
-}
-
-# Check if the RDAgent Service is available and restart it
-try {
-    $service = Get-Service -Name "RDAgent"
-    if ($service.Status -eq "Running") {
-        Restart-Service -Name "RDAgent"
-        Write-Output "RDAgent service restarted successfully."
-    }
-    else {
-        Write-Output "RDAgentBootLoader service is not running."
-    }
-}
-catch {
-    Write-Error "Failed to restart RDAgentBootLoader service: $($_.Exception.Message)"
 }
