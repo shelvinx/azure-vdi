@@ -120,7 +120,6 @@ $registrySettings = @(
     }
 )
 
-
 foreach ($setting in $registrySettings) {
     Set-RegistryDword -Path $setting.Path -Name $setting.Name -Value $setting.Value
 }
@@ -132,18 +131,4 @@ try {
 }
 catch {
     Write-Error "Failed to install Chocolatey: $($_.Exception.Message)"
-}
-
-# Set registry key for Entra ID join
-try {
-    if (-not (Test-Path "HKLM:\SOFTWARE\Microsoft\RDInfraAgent\AADJPrivate")) {
-        New-Item -Path "HKLM:\SOFTWARE\Microsoft\RDInfraAgent\AADJPrivate" -Force | Out-Null
-        Write-Output "Entra ID join registry key created successfully."
-    }
-    else {
-        Write-Output "Entra ID join registry key already exists."
-    }
-}
-catch {
-    Write-Error "Failed to set Entra ID join registry key: $($_.Exception.Message)"
 }
