@@ -7,11 +7,12 @@ module "avd_host_pool" {
 
   resource_group_name = module.resource_group.name
 
-  virtual_desktop_host_pool_location            = var.location
-  virtual_desktop_host_pool_load_balancer_type  = "BreadthFirst"
-  virtual_desktop_host_pool_type                = "Pooled"
-  virtual_desktop_host_pool_name                = module.naming.virtual_desktop_host_pool.name
-  virtual_desktop_host_pool_resource_group_name = module.resource_group.name
+  virtual_desktop_host_pool_location                 = var.location
+  virtual_desktop_host_pool_name                     = module.naming.virtual_desktop_host_pool.name
+  virtual_desktop_host_pool_resource_group_name      = module.resource_group.name
+  virtual_desktop_host_pool_load_balancer_type       = "BreadthFirst"
+  virtual_desktop_host_pool_type                     = "Pooled"
+  virtual_desktop_host_pool_maximum_sessions_allowed = 5
   virtual_desktop_host_pool_custom_rdp_properties = join(";", [
     "drivestoredirect:s:*",
     "audiomode:i:0", # 0 = No audio, 1 = Shared audio, 2 = Exclusive audio
@@ -21,9 +22,8 @@ module "avd_host_pool" {
     "enablecredsspsupport:i:1",
     "use multimon:i:1",
     "targetisaadjoined:i:1",
-    "enablerdsaadauth:i:1"
+    "enablerdsaadauth:i:1" # Required for Entra SSO
   ])
-
 
   tags = var.tags
 }

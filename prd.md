@@ -50,3 +50,33 @@
 - Deploy infrastructure
 - Verify access
 - Test user experience
+
+
+# Storage Setup:
+- Create Azure Storage Account (Premium for production workloads)
+- Configure Azure File Share for FSLogix profiles
+- Set up appropriate networking and firewall rules
+- Configure proper RBAC permissions
+
+# FSLogix Client Configuration:
+- Install FSLogix components on AVD session hosts
+- Configure registry settings for profile containers
+- Set up profile container size and location
+- Configure profile container type (VHDX, dynamic)
+
+# Security Considerations:
+- Enable storage firewall and restrict to AVD subnet
+- Implement Private Endpoints for enhanced security
+- Configure NTFS permissions on file share
+- Enable encryption at rest
+
+# User and Group Setup:
+- Configure RBAC for user access to profiles
+- Set up folder redirection policies if needed
+- Plan profile container organization
+
+# Testing:
+- Validate user profile roaming
+- Test login/logout scenarios
+- Verify application settings persistence
+- Measure profile load times

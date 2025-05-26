@@ -89,23 +89,20 @@ module "windows_vm" {
           }
       SETTINGS
     },
-    # AVD VM Config
     # VM Configuration Extension
-    vm_config = {
-      name                       = "ConfigurationScript"
+    fslogix_config = {
+      name                       = "FSLogixConfiguration-${each.key}"
       publisher                  = "Microsoft.Compute"
       type                       = "CustomScriptExtension"
       type_handler_version       = "1.10"
       auto_upgrade_minor_version = true
 
-      settings = <<SETTINGS
-      {
-        "fileUris": [
-          "https://raw.githubusercontent.com/shelvinx/azure-vdi/refs/heads/main/scripts/avd-config.ps1"
-        ],
-        "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File avd-config.ps1"
-      }
-      SETTINGS
+      settings = jsonencode({
+        fileUris = [
+          "https://raw.githubusercontent.com/shelvinx/azure-vdi/refs/heads/dev/scripts/fslogix-config.ps1"
+        ]
+        commandToExecute = "powershell -ExecutionPolicy Unrestricted -File fslogix-config.ps1 -StorageAccountName '${module.fslogix_storage.name}' -StorageAccountKey '${data.azurerm_storage_account.fslogix.primary_access_key}' -ProfileShare 'profiles' -OfficeShare 'office-containers'"
+      })
     },
     # Key Vault Configuration Extension
     keyvault = {

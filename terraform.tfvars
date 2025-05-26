@@ -9,3 +9,9 @@ eviction_policy = "Deallocate"
 
 # SKU Size
 sku_size = "Standard_D2als_v6"
+
+# FSLogix
+fslogix_profile_quota_gb = 100
+fslogix_office_quota_gb  = 50
+fslogix_storage_tier     = "Premium"
+fslogix_replication_type = "LRS"

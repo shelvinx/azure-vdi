@@ -64,3 +64,47 @@ variable "sku_size" {
   type        = string
   description = "SKU size for the VM"
 }
+
+# FSLogix-specific variables
+variable "fslogix_profile_quota_gb" {
+  type        = number
+  default     = 100
+  description = "Quota in GB for FSLogix profile file share"
+
+  validation {
+    condition     = var.fslogix_profile_quota_gb >= 10 && var.fslogix_profile_quota_gb <= 5120
+    error_message = "FSLogix profile quota must be between 10 GB and 5120 GB."
+  }
+}
+
+variable "fslogix_office_quota_gb" {
+  type        = number
+  default     = 100
+  description = "Quota in GB for FSLogix office file share"
+
+  validation {
+    condition     = var.fslogix_office_quota_gb >= 10 && var.fslogix_office_quota_gb <= 5120
+    error_message = "FSLogix office quota must be between 10 GB and 5120 GB."
+  }
+}
+
+variable "fslogix_storage_tier" {
+  type        = string
+  default     = "Premium"
+  description = "Storage tier for FSLogix storage account"
+
+  validation {
+    condition     = contains(["Standard", "Premium"], var.fslogix_storage_tier)
+    error_message = "FSLogix storage tier must be either Standard or Premium."
+  }
+}
+
+variable "fslogix_replication_type" {
+  type    = string
+  default = "LRS"
+
+  validation {
+    condition     = contains(["LRS", "ZRS", "GRS"], var.fslogix_replication_type)
+    error_message = "FSLogix replication type must be LRS, ZRS, or GRS."
+  }
+}

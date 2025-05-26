@@ -18,14 +18,14 @@ This project contains Terraform configurations to deploy and manage Azure Virtua
 
 This project uses the following Terraform providers:
 
-- **azurerm**: For deploying Azure resources
-- **random**: For generating random values when needed
-- **azuread**: For Azure AD integration
+- **azuread**: Azure AD integration
+- **naming**: CAF naming convention
 
 The state is managed in Terraform Cloud in the "az-env" organization and "az-vdi" workspace.
 
 ## Notes
 - `"aadJoin": true` is required for Entra ID integration; this feature is currently in preview. Note: Entra Joined Device needs to be deleted if re-deploying after destroy; as it causes issues with re-provisioning.
+- `AVD-DSC-Configuration Microsoft.Powershell.DSC` extension is quite slow; may take up to ~10 mins to complete.
 - Recommend updating extension settings with MDM Settings for Production Environment
 - AVD Agent is configured using DSC
 - Scale using the `windows_vm_count` variable, no additional changes required or add auto scaling plan configuration
