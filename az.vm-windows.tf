@@ -64,24 +64,32 @@ module "windows_vm" {
       type                       = "AADLoginForWindows"
       type_handler_version       = "2.2"
       auto_upgrade_minor_version = true
+
+      depends_on = ["AVDRegistration"]
     },
-    # AVD Registration Script
+    # AVD Agent Extension
     AVDRegistration = {
-      name                       = "AVD-Registration"
-      publisher                  = "Microsoft.Compute"
-      type                       = "CustomScriptExtension"
-      type_handler_version       = "1.10"
+      name                       = "AVD-DSC-Configuration"
+      publisher                  = "Microsoft.Powershell"
+      type                       = "DSC"
+      type_handler_version       = "2.77"
       auto_upgrade_minor_version = true
-      
-      settings = jsonencode({
-        "fileUris": [
-          "https://raw.githubusercontent.com/shelvinx/azure-vdi/refs/heads/main/scripts/avd-sessionhostconfig.ps1"
-        ],
-        "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File avd-sessionhostconfig.ps1 -RegistrationToken '${azurerm_virtual_desktop_host_pool_registration_info.registration.token}'"
-      })
-      
-      depends_on = ["AADLogin"]
+
+      settings = <<-SETTINGS
+          {
+            "modulesUrl": "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration_09-08-2022.zip",
+            "configurationFunction": "Configuration.ps1\\AddSessionHost",
+            "properties": {
+              "HostPoolName":"${module.avd_host_pool.resource.name}",
+              "aadJoin": true,
+              "UseAgentDownloadEndpoint": true,
+              "aadJoinPreview": false,
+              "registrationInfoToken": "${azurerm_virtual_desktop_host_pool_registration_info.registration.token}"
+            }
+          }
+      SETTINGS
     },
+    # AVD VM Config
     # VM Configuration Extension
     vm_config = {
       name                       = "ConfigurationScript"
@@ -89,7 +97,8 @@ module "windows_vm" {
       type                       = "CustomScriptExtension"
       type_handler_version       = "1.10"
       auto_upgrade_minor_version = true
-      settings                   = <<SETTINGS
+
+      settings = <<SETTINGS
       {
         "fileUris": [
           "https://raw.githubusercontent.com/shelvinx/azure-vdi/refs/heads/main/scripts/avd-config.ps1"
@@ -97,8 +106,6 @@ module "windows_vm" {
         "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File avd-config.ps1"
       }
       SETTINGS
-
-      depends_on = ["AVDRegistration"]
     },
     # Key Vault Configuration Extension
     keyvault = {

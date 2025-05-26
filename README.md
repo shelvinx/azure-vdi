@@ -25,13 +25,11 @@ This project uses the following Terraform providers:
 The state is managed in Terraform Cloud in the "az-env" organization and "az-vdi" workspace.
 
 ## Notes
-- Using Entra ID without Intune MDM requires the following registry key:
-  ```powershell
-  New-Item -Path HKLM:\SOFTWARE\Microsoft\RDInfraAgent\AADJPrivate
-  ```
-- Recommend updating the `entra_login` extension with MDM Settings for Production Environment
+- `"aadJoin": true` is required for Entra ID integration; this feature is currently in preview. Note: Entra Joined Device needs to be deleted if re-deploying after destroy; as it causes issues with re-provisioning.
+- Recommend updating extension settings with MDM Settings for Production Environment
 - AVD Agent is configured using DSC
 - Scale using the `windows_vm_count` variable, no additional changes required or add auto scaling plan configuration
+- Web Client URL [https://client.wvd.microsoft.com/arm/webclient/index.html](https://client.wvd.microsoft.com/arm/webclient/index.html)
 
 ## File Structure
 

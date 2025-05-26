@@ -13,17 +13,18 @@ module "avd_host_pool" {
   virtual_desktop_host_pool_name                = module.naming.virtual_desktop_host_pool.name
   virtual_desktop_host_pool_resource_group_name = module.resource_group.name
   virtual_desktop_host_pool_custom_rdp_properties = join(";", [
-    "drivestoredirect:s:*", 
+    "drivestoredirect:s:*",
     "audiomode:i:0", # 0 = No audio, 1 = Shared audio, 2 = Exclusive audio
     "videoplaybackmode:i:1",
     "redirectclipboard:i:1",
     "redirectcomports:i:1",
     "enablecredsspsupport:i:1",
     "use multimon:i:1",
-    "targetisaadjoined:i:1"  # This tells AVD the VMs are Entra ID joined
+    "targetisaadjoined:i:1",
+    "enablerdsaadauth:i:1"
   ])
 
-  
+
   tags = var.tags
 }
 
@@ -66,7 +67,7 @@ module "avd_application_group" {
 
 # Assign Desktop Application Group to Workspace
 resource "azurerm_virtual_desktop_workspace_application_group_association" "workspace_assignment" {
-  workspace_id = module.avd_workspace.resource.id
+  workspace_id         = module.avd_workspace.resource.id
   application_group_id = module.avd_application_group.resource.id
 }
 
