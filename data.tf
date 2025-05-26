@@ -14,10 +14,3 @@ data "azuread_group" "avd_admins" {
 data "azuread_group" "avd_users" {
   display_name = "AVD Users"
 }
-
-# Storage Account Key for FSLogix configuration
-data "azurerm_storage_account" "fslogix" {
-  name                = module.fslogix_storage.name
-  resource_group_name = module.resource_group.name
-  depends_on          = [module.fslogix_storage]
-}

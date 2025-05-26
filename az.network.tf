@@ -12,8 +12,11 @@ module "avd_vnet" {
 
   subnets = {
     avd_subnet = {
-      name           = module.naming.subnet.name
-      address_prefix = "10.0.0.0/24"
+      name                                           = module.naming.subnet.name
+      address_prefix                                 = "10.0.0.0/24"
+      service_endpoints                              = ["Microsoft.Storage"]
+      private_endpoint_network_policies              = "NetworkSecurityGroupEnabled"
+      private_link_service_network_policies_enabled  = true
       network_security_group = {
         id = module.avd_nsg.resource_id
       }
