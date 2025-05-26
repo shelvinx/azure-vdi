@@ -65,26 +65,21 @@ module "windows_vm" {
       type_handler_version       = "2.2"
       auto_upgrade_minor_version = true
     },
-    # AVD Agent Extension
+    # AVD Registration Script
     AVDRegistration = {
-      name                       = "AVD-DSC-Configuration"
-      publisher                  = "Microsoft.Powershell"
-      type                       = "DSC"
-      type_handler_version       = "2.83"
+      name                       = "AVD-Registration"
+      publisher                  = "Microsoft.Compute"
+      type                       = "CustomScriptExtension"
+      type_handler_version       = "1.10"
       auto_upgrade_minor_version = true
-
+      
       settings = jsonencode({
-        wmfVersion = "latest"
-        configuration = {
-          url      = "https://wvdportalstorageblob.blob.core.windows.net/galleryartifacts/Configuration.zip"
-          script   = "Configuration.ps1"
-          function = "AddSessionHost"
-        }
-        configurationArguments = {
-          hostPoolName          = module.avd_host_pool.resource.name
-          registrationInfoToken = azurerm_virtual_desktop_host_pool_registration_info.registration.token
-        }
+        "fileUris": [
+          "https://raw.githubusercontent.com/shelvinx/azure-vdi/refs/heads/main/scripts/avd-sessionhostconfig.ps1"
+        ],
+        "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File avd-sessionhostconfig.ps1 -RegistrationToken '${azurerm_virtual_desktop_host_pool_registration_info.registration.token}'"
       })
+      
       depends_on = ["AADLogin"]
     },
     # VM Configuration Extension
