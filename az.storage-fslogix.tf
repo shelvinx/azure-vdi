@@ -16,7 +16,7 @@ module "fslogix_storage" {
 
   # Enable features for FSLogix with Azure AD authentication
   min_tls_version                         = "TLS1_2"
-  shared_access_key_enabled               = false  # Disable key-based auth
+  shared_access_key_enabled               = true  # Disable key-based auth
   infrastructure_encryption_enabled       = true
   allow_nested_items_to_be_public         = false
   cross_tenant_replication_enabled        = false
