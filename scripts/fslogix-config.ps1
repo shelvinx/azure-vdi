@@ -44,7 +44,7 @@ try {
     
     Set-RegistryValue -Path $fslogixRegPath -Name "SizeInMBs" -Value 30720
     Set-RegistryValue -Path $fslogixRegPath -Name "IsDynamic" -Value 1
-    Set-RegistryValue -Path $fslogixRegPath -Name "VolumeType" -Value "VHDX"
+    Set-RegistryValue -Path $fslogixRegPath -Name "VolumeType" -Value "1"
     Set-RegistryValue -Path $fslogixRegPath -Name "FlipFlopProfileDirectoryName" -Value 1
     Set-RegistryValue -Path $fslogixRegPath -Name "AccessNetworkAsComputerObject" -Value 1
     Set-RegistryValue -Path $fslogixRegPath -Name "DeleteLocalProfileWhenVHDShouldApply" -Value 1
@@ -57,7 +57,7 @@ try {
     Set-RegistryValue -Path $officeRegPath -Name "VHDLocations" -Value $officeUNC -Type "String"
     Set-RegistryValue -Path $officeRegPath -Name "SizeInMBs" -Value 10240
     Set-RegistryValue -Path $officeRegPath -Name "IsDynamic" -Value 1
-    Set-RegistryValue -Path $officeRegPath -Name "VolumeType" -Value "VHDX"
+    Set-RegistryValue -Path $officeRegPath -Name "VolumeType" -Value "1"
     Set-RegistryValue -Path $officeRegPath -Name "AccessNetworkAsComputerObject" -Value 1
     
     # Start FSLogix service
