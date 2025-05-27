@@ -9,7 +9,7 @@ module "fslogix_storage" {
   location            = var.location
   resource_group_name = module.resource_group.name
 
-  account_kind             = "StorageV2"
+  account_kind             = "FileStorage"
   account_tier             = "Premium"
   account_replication_type = "LRS" # Use ZRS for production
   access_tier              = "Hot"
@@ -28,7 +28,7 @@ module "fslogix_storage" {
   
   # Network access rules
   network_rules = {
-    default_action = "Deny"
+    default_action = "Allow"
     ip_rules       = [] # Add your admin IPs here if needed
     virtual_network_subnet_ids = [
       module.avd_vnet.subnets.avd_subnet.resource_id

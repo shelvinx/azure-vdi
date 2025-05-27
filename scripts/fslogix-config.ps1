@@ -60,15 +60,6 @@ try {
     Set-RegistryValue -Path $officeRegPath -Name "VolumeType" -Value "1"
     Set-RegistryValue -Path $officeRegPath -Name "AccessNetworkAsComputerObject" -Value 1
     
-    # Start FSLogix service
-    $service = Get-Service -Name "FSLogix Apps Services" -ErrorAction SilentlyContinue
-    if ($service) {
-        Set-Service -Name "FSLogix Apps Services" -StartupType Automatic
-        Start-Service -Name "FSLogix Apps Services"
-        Write-Output "FSLogix Apps Services started successfully"
-    }
-    
-    Write-Output "FSLogix configuration completed successfully!"
     
 } catch {
     Write-Error "FSLogix configuration failed: $($_.Exception.Message)"
