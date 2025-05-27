@@ -86,3 +86,22 @@ module "host_public_ip" {
 
   tags = var.tags
 }
+
+# Private DNS Zone for File Storage
+module "private_dns_zone_file" {
+  source  = "Azure/avm-res-network-privatednszone/azurerm"
+  version = "0.3.3"
+
+  domain_name         = "privatelink.file.core.windows.net"
+  resource_group_name = module.resource_group.name
+
+  virtual_network_links = {
+    avd_vnet_link = {
+      vnetlinkname     = "fslogix-file-dns-link"
+      vnetid           = module.avd_vnet.resource_id
+      autoregistration = false
+    }
+  }
+
+  tags = var.tags
+}

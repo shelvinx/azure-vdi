@@ -16,11 +16,12 @@ module "fslogix_storage" {
 
   # Enable features for FSLogix with Azure AD authentication
   min_tls_version                         = "TLS1_2"
-  shared_access_key_enabled               = true  # Disable key-based auth
+  shared_access_key_enabled               = true  # This is required, otherwise key-based errors will occur.
   infrastructure_encryption_enabled       = true
   allow_nested_items_to_be_public         = false
   cross_tenant_replication_enabled        = false
 
+  # Entra ID Authentication (Kerberos)
   azure_files_authentication = {
     directory_type = "AADKERB"
   }
@@ -33,16 +34,6 @@ module "fslogix_storage" {
       module.avd_vnet.subnets.avd_subnet.resource_id
     ]
     bypass = ["AzureServices"]
-  }
-
-  # Private endpoint for secure access
-  private_endpoints = {
-    pe_file = {
-      name                          = "${module.naming.private_endpoint.name}-fslogix-file"
-      subnet_resource_id            = module.avd_vnet.subnets.avd_subnet.resource_id
-      subresource_name              = "file"
-      private_dns_zone_resource_ids = [module.private_dns_zone_file.resource_id]
-    }
   }
 
   # File shares for FSLogix
@@ -78,25 +69,6 @@ module "fslogix_storage" {
   tags = merge(var.tags, {
     Purpose = "FSLogix-Profiles"
   })
-}
-
-# Private DNS Zone for File Storage
-module "private_dns_zone_file" {
-  source  = "Azure/avm-res-network-privatednszone/azurerm"
-  version = "0.3.3"
-
-  domain_name         = "privatelink.file.core.windows.net"
-  resource_group_name = module.resource_group.name
-
-  virtual_network_links = {
-    avd_vnet_link = {
-      vnetlinkname     = "fslogix-file-dns-link"
-      vnetid           = module.avd_vnet.resource_id
-      autoregistration = false
-    }
-  }
-
-  tags = var.tags
 }
 
 # Additional RBAC for multiple VMs (dynamic assignment)
