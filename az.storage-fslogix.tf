@@ -9,10 +9,9 @@ module "fslogix_storage" {
   location            = var.location
   resource_group_name = module.resource_group.name
 
-  account_kind             = "FileStorage"
-  account_tier             = "Premium"
+  account_kind             = "FileStorage" # For Azure Files
+  account_tier             = "Premium" # Recommended for FSLogix
   account_replication_type = "LRS" # Use ZRS for production
-  access_tier              = "Hot"
 
   # Enable features for FSLogix with Azure AD authentication
   min_tls_version                         = "TLS1_2"
@@ -42,19 +41,10 @@ module "fslogix_storage" {
       name  = "profiles"
       quota = var.fslogix_profile_quota_gb
     }
-    office_containers = {
-      name  = "office-containers"
-      quota = var.fslogix_office_quota_gb
-    }
   }
 
   # RBAC assignments for AVD VMs and Azure AD authentication
   role_assignments = {
-    # System assigned identities for VMs
-    vm_storage_contributor = {
-      role_definition_id_or_name = "Storage File Data SMB Share Contributor"
-      principal_id               = module.windows_vm["vm1"].system_assigned_mi_principal_id
-    }
     # User groups for file access
     fslogix_users_contributor = {
       role_definition_id_or_name = "Storage File Data SMB Share Contributor"
@@ -69,16 +59,6 @@ module "fslogix_storage" {
   tags = merge(var.tags, {
     Purpose = "FSLogix-Profiles"
   })
-}
-
-# Additional RBAC for multiple VMs (dynamic assignment)
-resource "azurerm_role_assignment" "vm_fslogix_access" {
-  for_each = local.windows_vm_instances
-
-  scope                = module.fslogix_storage.resource_id
-  role_definition_name = "Storage File Data SMB Share Contributor"
-  principal_id         = module.windows_vm[each.key].system_assigned_mi_principal_id
-  description          = "Allows VM ${each.key} to access FSLogix storage"
 }
 
 # Storage Account data source (no longer needs access key)

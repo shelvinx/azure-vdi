@@ -37,30 +37,31 @@ try {
     # FSLogix Profile Container Settings
     $fslogixRegPath = "HKLM:\SOFTWARE\FSLogix\Profiles"
     
-    Set-RegistryValue -Path $fslogixRegPath -Name "Enabled" -Value 1
-    
+    # Set all FSLogix profile settings
     $profileUNC = "\\$StorageAccountName.file.core.windows.net\$ProfileShare"
+    
+    # Required settings
+    Set-RegistryValue -Path $fslogixRegPath -Name "Enabled" -Value 1
     Set-RegistryValue -Path $fslogixRegPath -Name "VHDLocations" -Value $profileUNC -Type "String"
     
-    Set-RegistryValue -Path $fslogixRegPath -Name "SizeInMBs" -Value 30720
+    # Performance and reliability settings
+    Set-RegistryValue -Path $fslogixRegPath -Name "SizeInMBs" -Value 30000
+    Set-RegistryValue -Path $fslogixRegPath -Name "VolumeType" -Value "VHDX" -Type "String"
     Set-RegistryValue -Path $fslogixRegPath -Name "IsDynamic" -Value 1
-    Set-RegistryValue -Path $fslogixRegPath -Name "VolumeType" -Value "1"
+    Set-RegistryValue -Path $fslogixRegPath -Name "ProfileType" -Value 0
+    
+    # Profile management settings
     Set-RegistryValue -Path $fslogixRegPath -Name "FlipFlopProfileDirectoryName" -Value 1
-    Set-RegistryValue -Path $fslogixRegPath -Name "AccessNetworkAsComputerObject" -Value 1
     Set-RegistryValue -Path $fslogixRegPath -Name "DeleteLocalProfileWhenVHDShouldApply" -Value 1
+   
+    # Lock retry settings
+    Set-RegistryValue -Path $fslogixRegPath -Name "LockedRetryCount" -Value 3
+    Set-RegistryValue -Path $fslogixRegPath -Name "LockedRetryInterval" -Value 15
     
-    # Office Container Settings
-    $officeRegPath = "HKLM:\SOFTWARE\Policies\FSLogix\ODFC"
-    Set-RegistryValue -Path $officeRegPath -Name "Enabled" -Value 1
-    
-    $officeUNC = "\\$StorageAccountName.file.core.windows.net\$OfficeShare"
-    Set-RegistryValue -Path $officeRegPath -Name "VHDLocations" -Value $officeUNC -Type "String"
-    Set-RegistryValue -Path $officeRegPath -Name "SizeInMBs" -Value 10240
-    Set-RegistryValue -Path $officeRegPath -Name "IsDynamic" -Value 1
-    Set-RegistryValue -Path $officeRegPath -Name "VolumeType" -Value "1"
-    Set-RegistryValue -Path $officeRegPath -Name "AccessNetworkAsComputerObject" -Value 1
-    
-    
+    # Reattach settings
+    Set-RegistryValue -Path $fslogixRegPath -Name "ReAttachIntervalSeconds" -Value 15
+    Set-RegistryValue -Path $fslogixRegPath -Name "ReAttachRetryCount" -Value 3
+
 } catch {
     Write-Error "FSLogix configuration failed: $($_.Exception.Message)"
     throw

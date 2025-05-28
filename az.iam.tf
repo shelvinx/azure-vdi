@@ -35,3 +35,15 @@ resource "azurerm_role_assignment" "avd_registration" {
   principal_id         = module.windows_vm[each.key].system_assigned_mi_principal_id
   description          = "Allows VM to register with AVD host pool"
 }
+
+# Role assignment for FSLogix access - Allows the VM to access FSLogix storage
+resource "azurerm_role_assignment" "fslogix_access" {
+  for_each = local.windows_vm_instances
+
+  scope                = module.fslogix_storage.resource_id
+  role_definition_name = "Storage File Data SMB Share Elevated Contributor"
+  principal_id         = module.windows_vm[each.key].system_assigned_mi_principal_id
+  description          = "Allows VM to access FSLogix storage"
+
+  depends_on = [module.fslogix_storage]
+}
