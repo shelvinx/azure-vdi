@@ -4,10 +4,7 @@ param(
     [string]$StorageAccountName,
     
     [Parameter(Mandatory = $false)]
-    [string]$ProfileShare = "profiles",
-    
-    [Parameter(Mandatory = $false)]
-    [string]$OfficeShare = "office-containers"
+    [string]$ProfileShare = "profiles"
 )
 
 $ErrorActionPreference = 'Stop'
