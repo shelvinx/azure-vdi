@@ -28,18 +28,23 @@ module "fslogix_storage" {
   # Network access rules
   network_rules = {
     default_action = "Allow"
-    ip_rules       = [] # Add your admin IPs here if needed
-    virtual_network_subnet_ids = [
-      module.avd_vnet.subnets.avd_subnet.resource_id
-    ]
     bypass = ["AzureServices"]
   }
 
   # File shares for FSLogix
-  containers = {
+  shares = {
     profiles = {
       name  = "profiles"
       quota = var.fslogix_profile_quota_gb
+      access_tier = "Premium"
+    }
+  }
+
+  share_properties = {
+    profiles = {
+      SMB = {
+        authentication_types = "Kerberos"
+      }
     }
   }
 
