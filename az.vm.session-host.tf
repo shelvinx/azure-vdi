@@ -57,6 +57,25 @@ module "windows_vm" {
   eviction_policy = var.eviction_policy
 
   extensions = {
+    domain_join = {
+      name = "DomainJoin"
+      publisher = "Microsoft.Compute"
+      type = "JsonADDomainJoin"
+      type_handler_version = "1.3"
+      auto_upgrade_minor_version = true
+
+      settings = jsonencode({
+        name = "projectaura.uk"
+        user = "shelvin@projectaura.uk"
+        ou_path = "OU=AADDC Computers,DC=projectaura,DC=uk"
+        restart = true
+        options = 3
+      })
+
+      protected_settings = jsonencode({
+        password = var.admin_password
+      })
+    }
     # Entra ID Join Extension
     AADLogin = {
       name                       = "AADLoginForWindows"

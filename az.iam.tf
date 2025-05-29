@@ -8,6 +8,14 @@ resource "azurerm_role_assignment" "entra_join" {
   description          = "Allows VM to join Entra ID (Azure AD)"
 }
 
+resource "azurerm_role_assignment" "vm_aad_dc_contributor" {
+  for_each = local.windows_vm_instances
+
+  scope                = data.azurerm_virtual_network.vnet_entra.id
+  role_definition_name = "Virtual Machine Contributor"
+  principal_id         = module.windows_vm[each.key].system_assigned_mi_principal_id
+}
+
 resource "azurerm_role_assignment" "vm_admin_login" {
   for_each = local.windows_vm_instances
 

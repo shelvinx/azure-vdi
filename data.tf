@@ -14,3 +14,9 @@ data "azuread_group" "avd_admins" {
 data "azuread_group" "avd_users" {
   display_name = "AVD Users"
 }
+
+# Entra ID VNET
+data "azurerm_virtual_network" "vnet_entra" {
+  name                = "vnet-entra"
+  resource_group_name = "rg-entradomain"
+}

@@ -25,11 +25,7 @@ function Set-RegistryValue {
 }
 
 try {
-    Write-Output "Configuring FSLogix for Azure AD authentication..."
-    
-    # Configure Azure AD Kerberos authentication
-    $kerberosRegPath = "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\Kerberos\Parameters"
-    Set-RegistryValue -Path $kerberosRegPath -Name "CloudKerberosTicketRetrievalEnabled" -Value 1
+    Write-Output "Configuring FSLogix for Entra Domain Services..."
     
     # FSLogix Profile Container Settings
     $fslogixRegPath = "HKLM:\SOFTWARE\FSLogix\Profiles"

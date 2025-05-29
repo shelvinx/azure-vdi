@@ -21,8 +21,8 @@ module "avd_host_pool" {
     "redirectcomports:i:1",
     "enablecredsspsupport:i:1",
     "use multimon:i:1",
-    "targetisaadjoined:i:1",
-    "enablerdsaadauth:i:1" # Required for Entra SSO
+    "targetisaadjoined:i:0",
+    "enablerdsaadauth:i:0" # Required for Entra SSO
   ])
 
   tags = var.tags

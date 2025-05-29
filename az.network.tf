@@ -102,6 +102,20 @@ module "private_dns_zone_file" {
       autoregistration = false
     }
   }
+}
 
-  tags = var.tags
+# VNET Peering from AVD to Entra Domain VNET
+module "avd-entradomain-peering" {
+  source  = "Azure/avm-res-network-virtualnetwork/azurerm//modules/peering"
+  version = "0.8.1"
+
+  name                = module.naming.virtual_network_peering.name
+
+  virtual_network = module.avd_vnet.resource_id
+  remote_virtual_network = data.azurerm_virtual_network.vnet_entra.resource_id
+}
+
+resource "azurerm_virtual_network_dns_servers" "avd_dns" {
+  virtual_network_id = module.avd_vnet.virtual_network_id
+  dns_servers       = ["10.2.0.4", "10.2.0.5"]
 }
