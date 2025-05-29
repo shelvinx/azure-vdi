@@ -118,7 +118,7 @@ module "windows_vm" {
 
       settings = jsonencode({
         fileUris = [
-          "https://raw.githubusercontent.com/shelvinx/azure-vdi/refs/heads/dev/scripts/fslogix-config.ps1"
+          "https://raw.githubusercontent.com/shelvinx/azure-vdi/refs/heads/test/scripts/fslogix-config.ps1"
         ]
         commandToExecute = "powershell -ExecutionPolicy Unrestricted -File fslogix-config.ps1 -StorageAccountName '${module.fslogix_storage.name}' -ProfileShare 'profiles'"
       })
